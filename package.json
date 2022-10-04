@@ -1,0 +1,22 @@
+{
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev --parallel",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "clear": "rimraf **/node_modules"
+  },
+  "devDependencies": {
+    "eslint": "^7.32.0",
+    "eslint-config-dbenhance": "*",
+    "prettier": "^2.5.1",
+    "rimraf": "^3.0.2",
+    "turbo": "latest"
+  },
+  "dependencies": {}
+}
