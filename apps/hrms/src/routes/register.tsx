@@ -6,7 +6,8 @@ import {
   createServerData$,
   redirect,
 } from 'solid-start/server'
-import { createUserSession, getUser, login } from '~/db/session'
+import { db } from '~/db'
+import { createUserSession, getUser, register } from '~/db/session'
 
 function validateUsername(username: unknown) {
   if (typeof username !== 'string' || username.length < 3) {
@@ -53,10 +54,15 @@ export default function Login() {
     if (Object.values(fieldErrors).some(Boolean)) {
       throw new FormError('Fields invalid', { fieldErrors, fields })
     }
-
-    const user = await login({ username, password })
+    const userExists = await db.user.findUnique({ where: { username } })
+    if (userExists) {
+      throw new FormError(`User with username ${username} already exists`, {
+        fields,
+      })
+    }
+    const user = await register({ username, password })
     if (!user) {
-      throw new FormError(`Username/Password combination is incorrect`, {
+      throw new FormError(`Something went wrong trying to create a new user.`, {
         fields,
       })
     }
@@ -66,7 +72,7 @@ export default function Login() {
   return (
     <div class="flex h-[80vh] items-center justify-center">
       <main class="card card-bordered w-96 p-4 shadow-xl">
-        <h1 class="card-title px-1 py-4">Login</h1>
+        <h1 class="card-title px-1 py-4">Register</h1>
         <Form class="form-control bg-white">
           <input
             type="hidden"
@@ -106,10 +112,10 @@ export default function Login() {
             </p>
           </Show>
           <p class="px-1 py-4">
-            Do no have an account? <a href="/register">Register</a>
+            Already have an account? <a href="/login">Login</a>
           </p>
           <button class="btn btn-primary" type="submit">
-            {data() ? 'Login' : ''}
+            {data() ? 'Register' : ''}
           </button>
         </Form>
       </main>
