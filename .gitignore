@@ -1,13 +1,34 @@
-.DS_Store
-node_modules
-.turbo
 *.log
-dist
-dist-ssr
 *.local
 .env
 .cache
+
+dist
+dist
+dist-ssr
 server/dist
 public/dist
+.solid
+.turbo
+.output
+.vercel
+.netlify
+netlify
 
+# dependencies
+node_modules
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+*.launch
+.settings/
 .vscode
+
+# Temp
+gitignore
+
+# System Files
+.DS_Store
+Thumbs.db
