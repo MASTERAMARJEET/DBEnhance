@@ -1,28 +1,28 @@
-import { useRouteData } from "@solidjs/router";
+import { useRouteData } from '@solidjs/router'
 import {
   createServerAction$,
   createServerData$,
   redirect,
-} from "solid-start/server";
-import { getUser, logout } from "~/db/session";
+} from 'solid-start/server'
+import { getUser, logout } from '~/db/session'
 
 export function routeData() {
   return createServerData$(async (_, { request }) => {
-    const user = await getUser(request);
+    const user = await getUser(request)
 
     if (!user) {
-      throw redirect("/login");
+      throw redirect('/login')
     }
 
-    return user;
-  });
+    return user
+  })
 }
 
 export default function Home() {
-  const user = useRouteData<typeof routeData>();
+  const user = useRouteData<typeof routeData>()
   const [, { Form }] = createServerAction$((f: FormData, { request }) =>
-    logout(request)
-  );
+    logout(request),
+  )
 
   return (
     <main class="w-full p-4 space-y-2">
@@ -34,5 +34,5 @@ export default function Home() {
         </button>
       </Form>
     </main>
-  );
+  )
 }
