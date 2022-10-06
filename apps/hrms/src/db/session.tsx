@@ -1,22 +1,21 @@
 import { redirect } from 'solid-start/server'
 import { createCookieSessionStorage } from 'solid-start/session'
 import { db } from '.'
-type LoginForm = {
-  username: string
-  password: string
+type AuthForm = {
+  name: string
 }
 
-export async function register({ username, password }: LoginForm) {
+export async function register({ name }: AuthForm) {
   return db.user.create({
-    data: { username: username, password },
+    data: {
+      name: name,
+    },
   })
 }
 
-export async function login({ username, password }: LoginForm) {
-  const user = await db.user.findUnique({ where: { username } })
+export async function login({ name }: AuthForm) {
+  const user = await db.user.findUnique({ where: { name } })
   if (!user) return null
-  const isCorrectPassword = password === user.password
-  if (!isCorrectPassword) return null
   return user
 }
 
@@ -67,7 +66,7 @@ export async function getUser(request: Request) {
   }
 
   try {
-    const user = await db.user.findUnique({ where: { id: Number(userId) } })
+    const user = await db.user.findUnique({ where: { id: userId } })
     return user
   } catch {
     throw logout(request)

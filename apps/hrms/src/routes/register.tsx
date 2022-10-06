@@ -9,15 +9,9 @@ import {
 import { db } from '~/db'
 import { createUserSession, getUser, register } from '~/db/session'
 
-function validateUsername(username: unknown) {
-  if (typeof username !== 'string' || username.length < 3) {
-    return `Usernames must be at least 3 characters long`
-  }
-}
-
-function validatePassword(password: unknown) {
-  if (typeof password !== 'string' || password.length < 6) {
-    return `Passwords must be at least 6 characters long`
+function validateName(name: unknown) {
+  if (typeof name !== 'string' || name.length < 3) {
+    return `Names must be at least 3 characters long`
   }
 }
 
@@ -35,32 +29,26 @@ export default function Login() {
   const params = useParams()
 
   const [loggingIn, { Form }] = createServerAction$(async (form: FormData) => {
-    const username = form.get('username')
-    const password = form.get('password')
+    const name = form.get('name')
     const redirectTo = form.get('redirectTo') || '/'
-    if (
-      typeof username !== 'string' ||
-      typeof password !== 'string' ||
-      typeof redirectTo !== 'string'
-    ) {
+    if (typeof name !== 'string' || typeof redirectTo !== 'string') {
       throw new FormError(`Form not submitted correctly.`)
     }
 
-    const fields = { username, password }
+    const fields = { name }
     const fieldErrors = {
-      username: validateUsername(username),
-      password: validatePassword(password),
+      name: validateName(name),
     }
     if (Object.values(fieldErrors).some(Boolean)) {
       throw new FormError('Fields invalid', { fieldErrors, fields })
     }
-    const userExists = await db.user.findUnique({ where: { username } })
+    const userExists = await db.user.findUnique({ where: { name } })
     if (userExists) {
-      throw new FormError(`User with username ${username} already exists`, {
+      throw new FormError(`User with name ${name} already exists`, {
         fields,
       })
     }
-    const user = await register({ username, password })
+    const user = await register({ name })
     if (!user) {
       throw new FormError(`Something went wrong trying to create a new user.`, {
         fields,
@@ -80,31 +68,17 @@ export default function Login() {
             value={params.redirectTo ?? '/'}
           />
           <div>
-            <label for="username-input" class="label">
-              Username
+            <label for="name-input" class="label">
+              Name
             </label>
             <input
-              name="username"
-              placeholder="kody"
+              name="name"
+              placeholder="Enter Name"
               class="input input-bordered w-full"
             />
           </div>
-          <Show when={loggingIn.error?.fieldErrors?.username}>
-            <p role="alert">{loggingIn.error.fieldErrors.username}</p>
-          </Show>
-          <div>
-            <label for="password-input" class="label">
-              Password
-            </label>
-            <input
-              name="password"
-              type="password"
-              placeholder="twixrox"
-              class="input input-bordered w-full"
-            />
-          </div>
-          <Show when={loggingIn.error?.fieldErrors?.password}>
-            <p role="alert">{loggingIn.error.fieldErrors.password}</p>
+          <Show when={loggingIn.error?.fieldErrors?.name}>
+            <p role="alert">{loggingIn.error.fieldErrors.name}</p>
           </Show>
           <Show when={loggingIn.error}>
             <p role="alert" id="error-message">

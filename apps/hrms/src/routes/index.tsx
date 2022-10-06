@@ -25,11 +25,11 @@ export default function Home() {
   )
 
   return (
-    <main class="w-full p-4 space-y-2">
-      <h1 class="font-bold text-3xl">Hello {user()?.username}</h1>
-      <h3 class="font-bold text-xl">Message board</h3>
+    <main class="w-full space-y-2 p-4">
+      <h1 class="text-3xl font-bold">Hello {user()?.username}</h1>
+      <h3 class="text-xl font-bold">Message board</h3>
       <Form>
-        <button name="logout" type="submit">
+        <button name="logout" type="submit" class="btn btn-secondary btn-sm">
           Logout
         </button>
       </Form>
