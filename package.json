@@ -9,7 +9,7 @@
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",
     "format": "prettier --write \".\"",
-    "clear": "rimraf **/node_modules **/.turbo"
+    "clear": "rimraf **/node_modules **/.turbo **/dist"
   },
   "devDependencies": {
     "eslint": "^7.32.0",
