@@ -44,6 +44,6 @@
     "node": ">=16"
   },
   "prisma": {
-    "schema": "prisma/schema.prisma."
+    "schema": "prisma/schema.prisma"
   }
 }
