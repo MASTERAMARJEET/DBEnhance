@@ -15,7 +15,7 @@
     "prebuild": "pnpm run generate",
     "predev": "pnpm run generate",
     "studio": "prisma studio",
-    "vercel-build": "prisma generate && prisma migrate deploy"
+    "vercel-build": "prisma generate && prisma migrate deploy && pnpm build"
   },
   "type": "module",
   "devDependencies": {
