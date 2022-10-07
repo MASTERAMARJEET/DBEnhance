@@ -14,6 +14,16 @@ datasource db {
 }
 
 model User {
-  id   String @id @default(cuid())
-  name String @unique
+  id       String     @id @default(cuid())
+  name     String     @unique
+  WorkItem WorkItem[]
+}
+
+model WorkItem {
+  id     Int      @id @default(autoincrement())
+  name   String
+  price  Decimal
+  date   DateTime @default(now())
+  user   User     @relation(fields: [userId], references: [id])
+  userId String
 }
