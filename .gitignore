@@ -1,6 +1,7 @@
 *.log
 *.local
 .env
+.env*
 .cache
 
 dist
