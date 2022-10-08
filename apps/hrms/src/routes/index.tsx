@@ -1,4 +1,3 @@
-import { WorkItem } from '@prisma/client'
 import { useRouteData } from '@solidjs/router'
 import { For, Show } from 'solid-js'
 import { FormError } from 'solid-start'
@@ -8,7 +7,7 @@ import {
   redirect,
 } from 'solid-start/server'
 import { getUser, getUserId, logout } from '~/db/session'
-import { addItem, getItems } from '~/db/workItem'
+import { addItem, getItems, WorkItem } from '~/db/workItem'
 
 export function routeData() {
   return createServerData$(async (_, { request }) => {

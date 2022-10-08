@@ -23,8 +23,7 @@
   "dependencies": {
     "@solidjs/meta": "^0.28.0",
     "@solidjs/router": "^0.4.3",
-    "solid-js": "^1.5.7",
-    "undici": "^5.10.0"
+    "solid-js": "^1.5.7"
   },
   "engines": {
     "node": ">=16"

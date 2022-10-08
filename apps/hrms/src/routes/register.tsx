@@ -6,7 +6,7 @@ import {
   createServerData$,
   redirect,
 } from 'solid-start/server'
-import { db } from '~/db'
+import db from '~/db'
 import { createUserSession, getUser, register } from '~/db/session'
 
 function validateName(name: unknown) {

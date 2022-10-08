@@ -1,6 +1,6 @@
-import { db } from '.'
+import db from '.'
 
-interface WorkItem {
+export interface WorkItem {
   name: string
   price: number
   userId: string

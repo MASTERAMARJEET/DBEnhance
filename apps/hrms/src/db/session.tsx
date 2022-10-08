@@ -1,6 +1,6 @@
 import { redirect } from 'solid-start/server'
 import { createCookieSessionStorage } from 'solid-start/session'
-import { db } from '.'
+import db from '.'
 type AuthForm = {
   name: string
 }

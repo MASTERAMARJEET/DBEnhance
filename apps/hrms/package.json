@@ -3,11 +3,13 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "solid-start dev",
-    "build": "solid-start build && cp ../../node_modules/.pnpm/@prisma+engines@*.*.*/node_modules/@prisma/engines/*query* prisma/schema.prisma .vercel/output/functions/render.func",
+    "build": "solid-start build",
     "start": "solid-start start",
     "lint": "eslint . --fix",
     "generate": "prisma generate",
+    "postinstall": "pnpm generate",
     "prebuild": "pnpm generate",
+    "postbuild": "cp ../../node_modules/.pnpm/@prisma+engines@*.*.*/node_modules/@prisma/engines/*query* prisma/schema.prisma .vercel/output/functions/render.func",
     "predev": "pnpm generate",
     "studio": "prisma studio",
     "vercel-build": "prisma generate && prisma migrate deploy && pnpm build"
@@ -32,8 +34,7 @@
     "@prisma/client": "^4.4.0",
     "@solidjs/meta": "^0.28.0",
     "@solidjs/router": "^0.4.3",
-    "solid-js": "^1.5.7",
-    "undici": "^5.10.0"
+    "solid-js": "^1.5.7"
   },
   "engines": {
     "node": ">=16"
