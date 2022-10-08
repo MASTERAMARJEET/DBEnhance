@@ -3,17 +3,12 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "solid-start dev",
-    "build": "solid-start build",
+    "build": "solid-start build && cp prisma/schema.prisma .vercel/output/functions/render.func",
     "start": "solid-start start",
     "lint": "eslint . --fix",
-    "db:migrate:deploy": "prisma migrate deploy",
-    "db:migrate:dev": "prisma migrate dev",
-    "db:push": "prisma db push",
-    "db:seed": "tsx src/seed.ts",
-    "format": "prisma format",
     "generate": "prisma generate",
-    "prebuild": "pnpm run generate",
-    "predev": "pnpm run generate",
+    "prebuild": "pnpm generate",
+    "predev": "pnpm generate",
     "studio": "prisma studio",
     "vercel-build": "prisma generate && prisma migrate deploy && pnpm build"
   },
@@ -42,8 +37,5 @@
   },
   "engines": {
     "node": ">=16"
-  },
-  "prisma": {
-    "schema": "prisma/schema.prisma"
   }
 }
