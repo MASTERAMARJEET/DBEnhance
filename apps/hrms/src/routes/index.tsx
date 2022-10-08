@@ -70,7 +70,7 @@ function formattedPrice(price: number) {
 function totalPrice(items: WorkItem[]) {
   return items
     .map((item) => Number(item.price))
-    .reduce((prev, curr) => prev + curr)
+    .reduce((prev, curr) => prev + curr, 0)
 }
 export default function Home() {
   const data = useRouteData<typeof routeData>()
