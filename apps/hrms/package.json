@@ -3,14 +3,14 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "solid-start dev",
-    "build": "solid-start build && cp prisma/schema.prisma .vercel/output/functions/render.func",
+    "build": "solid-start build && cp ../../node_modules/.pnpm/@prisma+engines@*.*.*/node_modules/@prisma/engines/*query* prisma/schema.prisma .vercel/output/functions/render.func",
     "start": "solid-start start",
     "lint": "eslint . --fix",
     "generate": "prisma generate",
     "prebuild": "pnpm generate",
     "predev": "pnpm generate",
     "studio": "prisma studio",
-    "vercel-build": "prisma generate && prisma migrate deploy && prisma -v && pnpm build"
+    "vercel-build": "prisma generate && prisma migrate deploy && pnpm build"
   },
   "type": "module",
   "devDependencies": {
