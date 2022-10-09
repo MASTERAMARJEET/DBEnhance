@@ -28,6 +28,7 @@
     "ts-node": "^10.9.1",
     "tsconfig": "workspace:*",
     "typescript": "^4.8.3",
+    "ui": "workspace:*",
     "vite": "^3.1.0"
   },
   "dependencies": {
