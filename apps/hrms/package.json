@@ -10,7 +10,6 @@
     "postinstall": "pnpm generate",
     "prebuild": "pnpm generate",
     "postbuild": "cp ../../node_modules/.pnpm/@prisma+engines@*.*.*/node_modules/@prisma/engines/*query* prisma/schema.prisma .vercel/output/functions/render.func",
-    "predev": "pnpm generate",
     "studio": "prisma studio",
     "vercel-build": "prisma generate && prisma migrate deploy && pnpm build"
   },

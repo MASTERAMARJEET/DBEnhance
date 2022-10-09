@@ -10,17 +10,6 @@ import {
 import { getUser, getUserId, logout } from '~/db/session'
 import { addItem, getItems } from '~/db/workItem'
 
-export function routeData() {
-  return createServerData$(async (_, { request }) => {
-    const user = await getUser(request)
-
-    if (!user) {
-      throw redirect('/login')
-    }
-    const workItems = await getItems(user.id)
-    return { user, workItems }
-  })
-}
 function validateName<T>(name: T) {
   if (typeof name !== 'string') {
     return 'Name must be string'
@@ -71,6 +60,17 @@ function totalPrice(items: WorkItem[]) {
   return items
     .map((item) => Number(item.price))
     .reduce((prev, curr) => prev + curr, 0)
+}
+export function routeData() {
+  return createServerData$(async (_, { request }) => {
+    const user = await getUser(request)
+
+    if (!user) {
+      throw redirect('/login')
+    }
+    const workItems = await getItems(user.id)
+    return { user, workItems }
+  })
 }
 export default function Home() {
   const data = useRouteData<typeof routeData>()
