@@ -1,17 +1,16 @@
+import { WorkItem } from '@prisma/client'
 import db from '.'
 
-export interface WorkItem {
-  name: string
-  price: number
-  userId: string
-}
 export async function getItems(userId: string) {
   const items = await db.workItem.findMany({
     where: { userId },
   })
   return items
 }
-export async function addItem({ name, price, userId }: WorkItem) {
+type AddItemProps = Pick<WorkItem, 'name' | 'userId'> & {
+  price: number
+}
+export async function addItem({ name, price, userId }: AddItemProps) {
   const item = await db.workItem.create({
     data: {
       name,
