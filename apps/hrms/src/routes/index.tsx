@@ -168,8 +168,8 @@ export default function Home() {
                     }}
                   </For>
                   <tr>
-                    <td class="border py-1 px-4"></td>
-                    <td class="border py-1 px-4"></td>
+                    <td class="border py-1 px-4" />
+                    <td class="border py-1 px-4" />
                     <td class="border py-1 px-4 text-right">
                       {formattedPrice(totalPrice(items))}
                     </td>
