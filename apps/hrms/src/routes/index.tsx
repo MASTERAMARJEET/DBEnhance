@@ -1,7 +1,7 @@
 import { WorkItem } from '@prisma/client'
-import { useRouteData } from '@solidjs/router'
+import { useRouteData, useSearchParams } from '@solidjs/router'
 import { For, Show } from 'solid-js'
-import { FormError } from 'solid-start'
+import { FormError, RouteDataArgs } from 'solid-start'
 import {
   createServerAction$,
   createServerData$,
@@ -9,6 +9,7 @@ import {
 } from 'solid-start/server'
 import { getUser, getUserId, logout } from '~/db/session'
 import { addItem, getItems } from '~/db/workItem'
+import { CDYMD, searchStringToPrams, RANGETYPE } from 'utils'
 
 function validateName<T>(name: T) {
   if (typeof name !== 'string') {
@@ -43,11 +44,15 @@ function validatedItemForm(form: FormData) {
   }
   return { name: name as string, price }
 }
-const dateFormatter = new Intl.DateTimeFormat('en-IN', {
-  timeStyle: 'short',
+const dateTimeFormatter = new Intl.DateTimeFormat('en-IN', {
+  weekday: 'short',
+  day: 'numeric',
+  month: 'short',
+  hour: 'numeric',
+  minute: 'numeric',
 })
 function formatedDateTime(date: Date | string) {
-  return dateFormatter.format(new Date(date))
+  return dateTimeFormatter.format(new Date(date))
 }
 const currencyFormatter = new Intl.NumberFormat('en-IN', {
   style: 'currency',
@@ -61,19 +66,39 @@ function totalPrice(items: WorkItem[]) {
     .map((item) => Number(item.price))
     .reduce((prev, curr) => prev + curr, 0)
 }
-export function routeData() {
-  return createServerData$(async (_, { request }) => {
-    const user = await getUser(request)
+export function routeData({ location }: RouteDataArgs) {
+  return createServerData$(
+    async ([searchString], { request }) => {
+      const user = await getUser(request)
 
-    if (!user) {
-      throw redirect('/login')
-    }
-    const workItems = await getItems(user.id)
-    return { user, workItems }
-  })
+      if (!user) {
+        throw redirect('/login')
+      }
+      const searchParams = searchStringToPrams(searchString)
+      let rangeType = RANGETYPE.month as CDYMD
+      if (searchParams?.rangeType) {
+        if (searchParams.rangeType in RANGETYPE) {
+          rangeType = searchParams.rangeType as CDYMD
+        }
+      }
+      let previous = false
+      if (searchParams?.previous === 'true') {
+        previous = true
+      }
+      const workItems = await getItems(user.id, rangeType, previous)
+      return { user, workItems }
+    },
+    {
+      key: () => [location.search],
+    },
+  )
 }
 export default function Home() {
   const data = useRouteData<typeof routeData>()
+  const [searchParams, setSearchParams] = useSearchParams()
+  const rangeType = searchParams.rangeType || 'month'
+  const previous = searchParams.previous || 'false'
+  const optionString = `${rangeType} ${previous}`
   const [, { Form: LogoutForm }] = createServerAction$(
     (f: FormData, { request }) => logout(request),
   )
@@ -88,6 +113,10 @@ export default function Home() {
       throw redirect('/')
     },
   )
+  const selectHandler = (value: string) => {
+    const values = value.split(' ')
+    setSearchParams({ rangeType: values[0], previous: values[1] })
+  }
   let itemFormRef: HTMLFormElement
   return (
     <>
@@ -144,6 +173,39 @@ export default function Home() {
         <Show when={data()?.workItems} keyed>
           {(items) => (
             <div class="m-2 overflow-x-auto sm:m-8">
+              <p class="inline text-lg">Work done</p>
+              <select
+                onChange={(e) => selectHandler(e.currentTarget.value)}
+                class="select select-sm select-bordered select-primary mx-2 my-2"
+              >
+                <option
+                  selected={optionString === 'day false'}
+                  value="day false"
+                >
+                  Today
+                </option>
+                <option selected={optionString === 'day true'} value="day true">
+                  Yesterday
+                </option>
+                <option
+                  selected={optionString === 'month false'}
+                  value="month false"
+                >
+                  This Month
+                </option>
+                <option
+                  selected={optionString === 'month true'}
+                  value="month true"
+                >
+                  Last Month
+                </option>
+                <option
+                  selected={optionString === 'year false'}
+                  value="year false"
+                >
+                  This year
+                </option>
+              </select>
               <table class="w-full">
                 <thead>
                   <tr>

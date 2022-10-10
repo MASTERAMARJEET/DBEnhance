@@ -1,9 +1,25 @@
 import { WorkItem } from '@prisma/client'
+import { getPreviousStart, getRange, getStart } from 'utils'
 import db from '.'
 
-export async function getItems(userId: string) {
+export async function getItems(
+  userId: string,
+  dateRange: Parameters<typeof getStart>[0],
+  previous?: boolean,
+) {
+  const rangeFunc = previous ? getPreviousStart : getStart
+  const dates = getRange(dateRange, rangeFunc(dateRange, new Date()))
   const items = await db.workItem.findMany({
-    where: { userId },
+    where: {
+      userId,
+      date: {
+        gte: dates[0],
+        lte: dates[1],
+      },
+    },
+    orderBy: {
+      date: 'desc',
+    },
   })
   return items
 }

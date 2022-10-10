@@ -28,6 +28,7 @@
     "tsconfig": "workspace:*",
     "typescript": "^4.8.3",
     "ui": "workspace:*",
+    "utils": "workspace:*",
     "vite": "^3.1.0"
   },
   "dependencies": {
