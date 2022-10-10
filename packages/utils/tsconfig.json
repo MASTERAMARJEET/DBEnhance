@@ -1,0 +1,12 @@
+{
+  "extends": "tsconfig/vite.json",
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "node",
+    "baseUrl": "./",
+    "paths": {
+      "~/*": ["./*"]
+    }
+  },
+  "exclude": ["node_modules"]
+}
