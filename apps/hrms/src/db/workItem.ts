@@ -36,3 +36,18 @@ export async function addItem({ name, price, userId }: AddItemProps) {
   })
   return item
 }
+type DeleteItemsProps = {
+  userId: WorkItem['userId']
+  itemIds: WorkItem['id'][]
+}
+export async function deleteItems({ userId, itemIds }: DeleteItemsProps) {
+  const { count } = await db.workItem.deleteMany({
+    where: {
+      id: {
+        in: itemIds,
+      },
+      userId,
+    },
+  })
+  return count
+}

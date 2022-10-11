@@ -1,8 +1,10 @@
 import { WorkItem } from '@prisma/client'
 import { Component } from 'solid-js'
+import { SetStoreFunction } from 'solid-js/store'
 import { formatedDateTime, formattedPrice } from '~/utils'
 interface ItemTileProps {
   item: WorkItem
+  setSelected: SetStoreFunction<number[]>
 }
 const ItemTile: Component<ItemTileProps> = (props) => {
   return (
@@ -19,7 +21,15 @@ const ItemTile: Component<ItemTileProps> = (props) => {
       <input
         type="checkbox"
         class="checkbox checkbox-primary mx-3"
-        onChange={(e) => console.log(e.currentTarget.checked, props.item.id)}
+        onChange={(e) => {
+          if (e.currentTarget.checked) {
+            props.setSelected((prev) => [...prev, props.item.id])
+          } else {
+            props.setSelected((prev) =>
+              prev.filter((id) => props.item.id !== id),
+            )
+          }
+        }}
       />
     </div>
   )

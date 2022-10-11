@@ -54,7 +54,7 @@ const AddItem: Component<AddItemProps> = (props) => {
   let itemFormRef: HTMLFormElement
   return (
     <Form
-      class="m-4 flex flex-col items-center justify-evenly gap-4 sm:m-8 sm:flex-row sm:items-end"
+      class="my-4 flex flex-col items-center justify-evenly gap-4 sm:my-8 sm:flex-row sm:items-end"
       ref={itemFormRef!}
       onSubmit={() => {
         setTimeout(() => itemFormRef.reset())
