@@ -22,9 +22,5 @@
     "solid-js": "^1.5.1",
     "tsconfig": "workspace:*",
     "typescript": "^4.8.2"
-  },
-  "peerDependencies": {
-    "solid-js": "^1.5.7",
-    "vite": "^3.0.4"
   }
 }
