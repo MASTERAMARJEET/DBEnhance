@@ -1,5 +1,5 @@
 import { CALENDAR_TYPES, WEEKDAYS } from './const'
-import type { CDYM, CDYMD, DYM } from './const'
+import type { CDYMW, CDYMWD, DYM } from './const'
 import { formatYear as defaultFormatYear } from './formatter'
 
 function makeGetEdgeOfNeighbor<TGetPeriod, TGetEdgeOfPeriod>(
@@ -43,6 +43,12 @@ function makeGetEdgeOfNeighborMonth<TReturn>(
     previousPeriod.setHours(0, 0, 0, 0)
     return getEdgeOfPeriod(previousPeriod)
   }
+}
+function makeGetEdgeOfNeighborWeek<TReturn>(
+  getEdgeOfPeriod: (date: Date, offset: number) => TReturn,
+  defaultOffset: number,
+) {
+  return (date: Date, offset = defaultOffset) => getEdgeOfPeriod(date, offset)
 }
 
 function makeGetEdgeOfNeighborDay<TReturn>(
@@ -162,7 +168,7 @@ export function getWeekNumber(
     calendarType === CALENDAR_TYPES.US
       ? CALENDAR_TYPES.US
       : CALENDAR_TYPES.ISO_8601
-  const beginOfWeek = getWeekStart(date, calendarType)
+  const beginOfWeek = getWeekStart(date, 0, calendarType)
   let year = getYear(date) + 1
   let dayInWeekOne
   let beginOfFirstWeek
@@ -174,7 +180,7 @@ export function getWeekNumber(
       0,
       calendarTypeForWeekNumber === CALENDAR_TYPES.ISO_8601 ? 4 : 1,
     )
-    beginOfFirstWeek = getWeekStart(dayInWeekOne, calendarType)
+    beginOfFirstWeek = getWeekStart(dayInWeekOne, 0, calendarType)
     year -= 1
   } while (date < beginOfFirstWeek)
 
@@ -406,13 +412,16 @@ export const getNextMonthStart = makeGetEdgeOfNeighborMonth(getMonthStart, 1)
 
 export function getWeekStart(
   date: Date,
+  offset = 0,
   calendarType = CALENDAR_TYPES.ISO_8601,
 ) {
   const year = getYear(date)
   const monthIndex = getMonth(date)
-  const day = date.getDate() - getDayOfWeek(date, calendarType)
+  const day = date.getDate() - getDayOfWeek(date, calendarType) + 7 * offset
   return new Date(year, monthIndex, day)
 }
+export const getPreviousWeekStart = makeGetEdgeOfNeighborWeek(getWeekStart, -1)
+export const getNextWeekStart = makeGetEdgeOfNeighborWeek(getWeekStart, 1)
 
 export function getDayStart(date: Date) {
   const year = getYear(date)
@@ -458,6 +467,10 @@ export const getMonthEnd = makeGetEnd(getNextMonthStart)
 export const getPreviousMonthEnd = makeGetEdgeOfNeighborMonth(getMonthEnd, -1)
 export const getNextMonthEnd = makeGetEdgeOfNeighborMonth(getMonthEnd, 1)
 
+export const getWeekEnd = makeGetEnd(getNextWeekStart)
+export const getPreviousWeekEnd = makeGetEdgeOfNeighborDay(getWeekEnd, -1)
+export const getNextWeekEnd = makeGetEdgeOfNeighborDay(getWeekEnd, 1)
+
 export const getDayEnd = makeGetEnd(getNextDayStart)
 export const getPreviousDayEnd = makeGetEdgeOfNeighborDay(getDayEnd, -1)
 export const getNextDayEnd = makeGetEdgeOfNeighborDay(getDayEnd, 1)
@@ -469,6 +482,7 @@ export const getCenturyRange = makeGetRange([getCenturyStart, getCenturyEnd])
 export const getDecadeRange = makeGetRange([getDecadeStart, getDecadeEnd])
 export const getYearRange = makeGetRange([getYearStart, getYearEnd])
 export const getMonthRange = makeGetRange([getMonthStart, getMonthEnd])
+export const getWeekRange = makeGetRange([getWeekStart, getWeekEnd])
 export const getDayRange = makeGetRange([getDayStart, getDayEnd])
 
 /**
@@ -481,7 +495,7 @@ export const getDayRange = makeGetRange([getDayStart, getDayEnd])
  * @param {string} rangeType Range type (e.g. 'day')
  * @param {Date} date Date.
  */
-export function getStart(rangeType: CDYMD, date: Date) {
+export function getStart(rangeType: CDYMWD, date: Date) {
   switch (rangeType) {
     case 'century':
       return getCenturyStart(date)
@@ -491,13 +505,15 @@ export function getStart(rangeType: CDYMD, date: Date) {
       return getYearStart(date)
     case 'month':
       return getMonthStart(date)
+    case 'week':
+      return getWeekStart(date)
     case 'day':
       return getDayStart(date)
     default:
       throw new Error(`Invalid rangeType: ${rangeType}`)
   }
 }
-export function getPreviousStart(rangeType: CDYMD, date: Date) {
+export function getPreviousStart(rangeType: CDYMWD, date: Date) {
   switch (rangeType) {
     case 'century':
       return getPreviousCenturyStart(date)
@@ -507,13 +523,15 @@ export function getPreviousStart(rangeType: CDYMD, date: Date) {
       return getPreviousYearStart(date)
     case 'month':
       return getPreviousMonthStart(date)
+    case 'week':
+      return getPreviousWeekStart(date)
     case 'day':
       return getPreviousDayStart(date)
     default:
       throw new Error(`Invalid rangeType: ${rangeType}`)
   }
 }
-export function getNextStart(rangeType: CDYM, date: Date) {
+export function getNextStart(rangeType: CDYMW, date: Date) {
   switch (rangeType) {
     case 'century':
       return getNextCenturyStart(date)
@@ -557,7 +575,7 @@ export const getNextStart2 = (rangeType: DYM, date: Date) => {
  * @param {string} rangeType Range type (e.g. 'day')
  * @param {Date} date Date.
  */
-export function getEnd(rangeType: CDYMD, date: Date) {
+export function getEnd(rangeType: CDYMWD, date: Date) {
   switch (rangeType) {
     case 'century':
       return getCenturyEnd(date)
@@ -567,13 +585,15 @@ export function getEnd(rangeType: CDYMD, date: Date) {
       return getYearEnd(date)
     case 'month':
       return getMonthEnd(date)
+    case 'week':
+      return getWeekEnd(date)
     case 'day':
       return getDayEnd(date)
     default:
       throw new Error(`Invalid rangeType: ${rangeType}`)
   }
 }
-export function getPreviousEnd(rangeType: CDYM, date: Date) {
+export function getPreviousEnd(rangeType: CDYMWD, date: Date) {
   switch (rangeType) {
     case 'century':
       return getPreviousCenturyEnd(date)
@@ -583,6 +603,10 @@ export function getPreviousEnd(rangeType: CDYM, date: Date) {
       return getPreviousYearEnd(date)
     case 'month':
       return getPreviousMonthEnd(date)
+    case 'week':
+      return getPreviousWeekEnd(date)
+    case 'day':
+      return getPreviousDayEnd(date)
     default:
       throw new Error(`Invalid rangeType: ${rangeType}`)
   }
@@ -605,7 +629,7 @@ export const getPreviousEnd2 = (rangeType: DYM, date: Date) => {
  * @param {string} rangeType Range type (e.g. 'day')
  * @param {Date} date Date.
  */
-export function getRange(rangeType: CDYMD, date: Date) {
+export function getRange(rangeType: CDYMWD, date: Date) {
   switch (rangeType) {
     case 'century':
       return getCenturyRange(date)
@@ -615,6 +639,8 @@ export function getRange(rangeType: CDYMD, date: Date) {
       return getYearRange(date)
     case 'month':
       return getMonthRange(date)
+    case 'week':
+      return getWeekRange(date)
     case 'day':
       return getDayRange(date)
     default:
@@ -628,7 +654,7 @@ export function getRange(rangeType: CDYMD, date: Date) {
  * @param {Date} date1 First date.
  * @param {Date} date2 Second date.
  */
-export function getValueRange(rangeType: CDYMD, date1: Date, date2: Date) {
+export function getValueRange(rangeType: CDYMWD, date1: Date, date2: Date) {
   // @ts-expect-error subtraction for date is supported. TS doesn't understand that
   const rawNextValue = [date1, date2].sort((a, b) => a - b)
   return [

@@ -67,9 +67,10 @@ export const RANGETYPE = {
   decade: 'decade',
   year: 'year',
   month: 'month',
+  week: 'week',
   day: 'day',
 } as const
 
-export type CDYMD = keyof typeof RANGETYPE
-export type CDYM = keyof Omit<typeof RANGETYPE, 'day'>
-export type DYM = keyof Omit<typeof RANGETYPE, 'day' | 'century'>
+export type CDYMWD = keyof typeof RANGETYPE
+export type CDYMW = keyof Omit<typeof RANGETYPE, 'day'>
+export type DYM = keyof Omit<typeof RANGETYPE, 'day' | 'century' | 'week'>

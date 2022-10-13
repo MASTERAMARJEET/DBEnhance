@@ -7,8 +7,8 @@ import {
   redirect,
 } from 'solid-start/server'
 import { getUser, getUserId } from '~/db/session'
-import { addItem, deleteItems, getItems } from '~/db/workItem'
-import { CDYMD, searchStringToPrams, RANGETYPE } from 'utils'
+import { deleteItems, getItems } from '~/db/workItem'
+import { CDYMWD, searchStringToPrams, RANGETYPE } from 'utils'
 import ItemTile from '~/components/ItemTile'
 import { formattedPrice, totalPrice } from '~/utils'
 import TimeRangeSelect from '~/components/TimeRangeSelect'
@@ -26,10 +26,10 @@ export function routeData({ location }: RouteDataArgs) {
         throw redirect('/login')
       }
       const searchParams = searchStringToPrams(searchString)
-      let rangeType = RANGETYPE.month as CDYMD
+      let rangeType = RANGETYPE.week as CDYMWD
       if (searchParams?.rangeType) {
         if (searchParams.rangeType in RANGETYPE) {
-          rangeType = searchParams.rangeType as CDYMD
+          rangeType = searchParams.rangeType as CDYMWD
         }
       }
       let previous = false

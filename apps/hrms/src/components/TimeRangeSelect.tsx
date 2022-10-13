@@ -1,13 +1,11 @@
 import { Component, For, JSX } from 'solid-js'
 const options: { title: string; value: string }[] = [
   { value: 'day false', title: 'Today' },
-
   { value: 'day true', title: 'Yesterday' },
-
+  { value: 'week false', title: 'This Week' },
+  { value: 'week true', title: 'Last Week' },
   { value: 'month false', title: 'This Month' },
-
   { value: 'month true', title: 'Last Month' },
-
   { value: 'year false', title: 'This year' },
 ]
 
