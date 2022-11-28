@@ -11,6 +11,7 @@
     "dev": {
       "cache": false
     },
-    "hrms#dev": {}
+    "hrms#dev": {},
+    "hrms#vercel-build": {}
   }
 }
