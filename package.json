@@ -20,11 +20,11 @@
     "clean:install": "pnpm clean && pnpm install"
   },
   "devDependencies": {
-    "eslint": "^7.32.0",
-    "eslint-config-dbenhance": "workspace:*",
-    "prettier": "^2.7.1",
-    "prettier-plugin-tailwindcss": "^0.1.13",
+    "eslint": "^8.28.0",
+    "eslint-config-dbenhance": "workspace:0.0.0",
+    "prettier": "^2.8.0",
+    "prettier-plugin-tailwindcss": "^0.2.0",
     "rimraf": "^3.0.2",
-    "turbo": "latest"
+    "turbo": "^1.6.3"
   }
 }
