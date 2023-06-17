@@ -14,6 +14,12 @@ function validateName(name: unknown) {
   }
 }
 
+function validatePassword(password: unknown) {
+  if (typeof password !== 'string' || password !== 'locked') {
+    return 'Invalid Password'
+  }
+}
+
 export function routeData() {
   return createServerData$(async (_, { request }) => {
     if (await getUser(request)) {
@@ -29,14 +35,20 @@ export default function Login() {
 
   const [loggingIn, { Form }] = createServerAction$(async (form: FormData) => {
     const name = form.get('name')
+    const password = form.get('password')
     const redirectTo = form.get('redirectTo') || '/'
-    if (typeof name !== 'string' || typeof redirectTo !== 'string') {
+    if (
+      typeof name !== 'string' ||
+      typeof password !== 'string' ||
+      typeof redirectTo !== 'string'
+    ) {
       throw new FormError(`Form not submitted correctly.`)
     }
 
-    const fields = { name }
+    const fields = { name, password }
     const fieldErrors = {
       name: validateName(name),
+      password: validatePassword(password),
     }
     if (Object.values(fieldErrors).some(Boolean)) {
       throw new FormError('Fields invalid', { fieldErrors, fields })
@@ -62,23 +74,40 @@ export default function Login() {
             value={params.redirectTo ?? '/'}
           />
           <div>
-            <label for="name-input" class="label">
-              Name
+            <label for="name" class="label">
+              <span class="label-text">Name</span>
             </label>
             <input
               name="name"
               placeholder="Enter Name"
               class="input input-bordered w-full"
             />
+            <Show when={loggingIn.error?.fieldErrors?.name}>
+              <label class="label">
+                <span role="alert" class="label-text text-error">
+                  {loggingIn.error.fieldErrors.name}
+                </span>
+              </label>
+            </Show>
           </div>
-          <Show when={loggingIn.error?.fieldErrors?.name}>
-            <p role="alert">{loggingIn.error.fieldErrors.name}</p>
-          </Show>
-          <Show when={loggingIn.error}>
-            <p role="alert" id="error-message">
-              {loggingIn.error.message}
-            </p>
-          </Show>
+          <div>
+            <label for="password" class="label">
+              <span class="label-text">Password</span>
+            </label>
+            <input
+              name="password"
+              type="password"
+              placeholder="Enter password"
+              class="input input-bordered w-full"
+            />
+            <Show when={loggingIn.error?.fieldErrors?.password}>
+              <label class="label">
+                <span role="alert" class="label-text text-error">
+                  {loggingIn.error.fieldErrors.password}
+                </span>
+              </label>
+            </Show>
+          </div>
           <p class="px-1 py-4">
             Do not have an account? <a href="/register">Register</a>
           </p>
