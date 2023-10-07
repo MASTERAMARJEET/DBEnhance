@@ -10,7 +10,7 @@
   "type": "module",
   "devDependencies": {
     "autoprefixer": "^10.4.13",
-    "postcss": "^8.4.21",
+    "postcss": "^8.4.31",
     "solid-start": "^0.2.16",
     "solid-start-node": "^0.2.16",
     "solid-start-vercel": "^0.2.16",
