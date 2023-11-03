@@ -17,7 +17,7 @@
   "devDependencies": {
     "@types/node": "^18.11.18",
     "autoprefixer": "^10.4.13",
-    "postcss": "^8.4.21",
+    "postcss": "^8.4.31",
     "prisma": "^4.9.0",
     "solid-start": "^0.2.16",
     "solid-start-node": "^0.2.16",
